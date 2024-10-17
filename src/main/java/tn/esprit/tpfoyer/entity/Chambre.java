@@ -9,8 +9,6 @@ import java.util.Set;
 
 
 @Entity
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
@@ -34,4 +32,12 @@ public class Chambre {
     @ManyToOne(cascade = CascadeType.ALL)
     Bloc bloc;
 
+    public Chambre(Long o, int numeroChambre, TypeChambre typeChambre, Object reservations, Object bloc) {
+
+    }
+
+
+    public long getIdChambre() {
+        return idChambre;
+    }
 }
