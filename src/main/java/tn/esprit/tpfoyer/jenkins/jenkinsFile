@@ -1,0 +1,49 @@
+pipeline {
+    agent any
+
+    environment {
+        GIT_REPO = 'https://github.com/selim04-ops/tp-foyer.git'  
+        BRANCH = 'foyer-management'  
+        GIT_CREDENTIALS_ID = 'git-token'  // Use the correct credential ID stored in Jenkins
+        SONARQUBE_ENV = 'sonarqube'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Pull the code from GitHub
+                git branch: "${BRANCH}", credentialsId: "${GIT_CREDENTIALS_ID}", url: "${GIT_REPO}"
+            }
+        }
+
+        stage('Build') {
+            steps {
+                // Navigate to the project directory
+               
+                    // Build the project with Maven
+                    sh 'mvn clean install'
+                
+            }
+        }
+        
+        
+        stage('SonarQube Analysis') {
+            steps {
+                // Run SonarQube analysis
+                withSonarQubeEnv("${SONARQUBE_ENV}") {
+                    sh 'mvn sonar:sonar'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build was successful!'
+        }
+        failure {
+            echo 'Build failed.'
+        }
+    }
+}
+
